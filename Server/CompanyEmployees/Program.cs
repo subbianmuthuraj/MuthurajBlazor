@@ -82,6 +82,7 @@ if (app.Environment.IsDevelopment())
     app.UseWebAssemblyDebugging();
 //**Deployment
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 //Deployment
 app.UseStaticFiles();
 app.UseBlazorFrameworkFiles();
@@ -98,7 +99,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseIpRateLimiting();
-app.UseCors("CorsPolicy");
+
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
 
