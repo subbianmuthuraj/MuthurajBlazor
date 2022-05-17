@@ -1,0 +1,28 @@
+﻿<div style="text-align: center">
+    <h1 style="color: @Color">
+        @Title
+    </h1>
+    <p>
+        Feel free to
+        <a href="https://redbubble.com/people/vpecanac/works/4476889-code-maze-merch?asc=u" target="_blank">
+            Visit our shop
+        </a>
+        any time you want.
+    </p>
+    <p>
+        <img @attributes="AdditionalAttributes" class="img-fluid" />
+    </p>
+</div>
+
+@code {
+    [EditorRequired]
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> AdditionalAttributes { get; set; }
+
+    [CascadingParameter(Name = "HeadingColor")]
+    public string Color { get; set; }
+
+}

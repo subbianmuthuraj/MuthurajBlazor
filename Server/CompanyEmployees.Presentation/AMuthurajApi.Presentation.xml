@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AMuthurajApi.Presentation</name>
+    </assembly>
+    <members>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CompaniesController.GetCompanies">
+            <summary>
+            Gets the list of all companies
+            </summary>
+            <returns>The companies list</returns>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CompaniesController.CreateCompany(SharedDto.DataTransferObjects.CompanyForCreationDto)">
+            <summary>
+            Creates a newly created company
+            </summary>
+            <param name="company"></param>
+            <returns>A newly created company</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CountriesController.CreateCountries(SharedDto.DataTransferObjects.Masters.CountryCreateDto)">
+            <summary>
+            Creates a New Country
+            </summary>
+            <param name="country"></param>
+            <returns>A newly created Country</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CountriesController.DeleteCountry(System.Int32)">
+            <summary>
+            Deletes a Country
+            </summary>
+            <param name="Id"></param>
+            <returns> The Country Record </returns>
+            <response code="400">If the item is null</response>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CountriesController.GetCountry(System.Int32)">
+            <summary>
+            Gets a record based on ID from Country
+            </summary>
+            <param name="Id"></param>
+            <returns> NoContent </returns>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CountriesController.GetCountries(SharedDto.RequestFeatures.CountryParameters)">
+            <summary>
+            Gets All the records Country
+            </summary>
+            <returns> All the Records in Country</returns>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.CountriesController.Update(System.Int32,SharedDto.DataTransferObjects.Masters.CountryUpdateDto)">
+            <summary>
+            Updates Country
+            </summary>
+            <param name="Id"></param>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.ServProvidersController.CreateServProviders(SharedDto.DataTransferObjects.Masters.ServProviderCreateDto)">
+            <summary>
+            Creates a New ServProvider
+            </summary>
+            <param name="servprovider"></param>
+            <returns>A newly created ServProvider</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+            <response code="422">If the model is invalid</response>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.ServProvidersController.DeleteServProvider(System.Int32)">
+            <summary>
+            Deletes a ServProvider
+            </summary>
+            <param name="Id"></param>
+            <returns> The ServProvider Record </returns>
+            <response code="400">If the item is null</response>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.ServProvidersController.GetServProvider(System.Int32)">
+            <summary>
+            Gets a record based on ID from ServProvider
+            </summary>
+            <param name="Id"></param>
+            <returns> NoContent </returns>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.ServProvidersController.GetServProviders(SharedDto.RequestFeatures.GeneralParameters)">
+            <summary>
+            Gets All the records ServProvider
+            </summary>
+            <returns> All the Records in ServProvider</returns>
+        </member>
+        <member name="M:AMuthurajApi.Presentation.Controllers.ServProvidersController.Update(System.Int32,SharedDto.DataTransferObjects.Masters.ServProviderUpdateDto)">
+            <summary>
+            Updates ServProvider
+            </summary>
+            <param name="Id"></param>
+        </member>
+    </members>
+</doc>

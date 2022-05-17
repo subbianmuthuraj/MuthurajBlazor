@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <div class="content px-4">
+            <CascadingValue Name="HeadingColor" Value="@_color">
+                @Body
+            </CascadingValue>
+        </div>
+        <BlazoredToasts Position="ToastPosition.TopRight"
+                        Timeout="10"
+                        IconType="IconType.FontAwesome"
+                        SuccessIcon="fa fa-thumbs-up"
+                        ErrorIcon="fa fa-bug" />
+    </main>
+</div>
+@code {
+    private readonly string _color = "#0505b5";
+    ErrorBoundary? errorBoundary;
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
+}
+

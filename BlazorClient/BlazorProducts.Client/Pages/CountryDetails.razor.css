@@ -1,0 +1,17 @@
+﻿.country-flag {
+    width: 100%;
+}
+
+.country-code2 {
+    color: #0094ff;
+}
+
+.country-code2 {
+    color: #00ff21;
+}
+
+.country-offname {
+    color: #d62e2e;
+    font-style: italic;
+    white-space: pre-line;
+}
