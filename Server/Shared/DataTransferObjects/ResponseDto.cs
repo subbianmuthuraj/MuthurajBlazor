@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedDto.DataTransferObjects.Masters
+namespace SharedDto.DataTransferObjects
 {
     public class ResponseDto
     {
