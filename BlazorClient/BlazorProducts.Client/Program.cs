@@ -22,6 +22,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 using BlazorProducts.Client;
+using Microsoft.AspNetCore.Components.Authorization;
+using BlazorProducts.Client.AuthProviders;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -44,6 +46,10 @@ builder.Services.AddScoped<ICountryHttpRepository, CountryHttpRepository>();
 
 builder.Services.AddScoped<HttpInterceptorService>();
 
+//Authorization
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, TestAuthStateProvider>();
+//**Authorization
 
 
 await builder.Build().RunAsync();

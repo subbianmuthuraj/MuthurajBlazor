@@ -1,0 +1,47 @@
+﻿@page "/jsinterop"
+<h3>JS Interop in Blazor WebAssembly</h3>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <h4>
+            Example for calling a JS Function returning void;
+        </h4>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-info" @onclick="ShowAlertWindow">
+            Show Alert Window
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h4>
+            Example for calling a JS Function returning Result;
+        </h4>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-info" @onclick="ExtractEmailDetails">
+            Extract Email
+        </button>
+    </div>
+    <div class="col-md-4">
+        @_messageDetails
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>
+            Passing HTML Reference to JS Function;
+        </h4>
+    </div>
+    <div class="col-md-4">
+        <input type="text" @ref="_elRef" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <button type="button" class="btn btn-info" @onclick="FocusAndStyleElement">
+            Focus
+        </button>
+
+    </div>
+</div>
