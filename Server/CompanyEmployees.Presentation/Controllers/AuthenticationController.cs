@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using SharedDto.DataTransferObjects;
+using SharedDto.DataTransferObjects.Masters;
 
 namespace AMuthurajApi.Presentation.Controllers;
 
@@ -22,15 +23,19 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
         var result = await _service.AuthenticationService.RegisterUser(userForRegistration);
+        //if (!result.Succeeded)
+        //{
+        //    foreach (var error in result.Errors)
+        //    {
+        //        ModelState.TryAddModelError(error.Code, error.Description);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
         if (!result.Succeeded)
         {
-            foreach (var error in result.Errors)
-            {
-                ModelState.TryAddModelError(error.Code, error.Description);
-            }
-            return BadRequest(ModelState);
+            var errors = result.Errors.Select(e => e.Description);
+            return BadRequest(new ResponseDto { Errors = errors });
         }
-
         return StatusCode(201);
     }
 
