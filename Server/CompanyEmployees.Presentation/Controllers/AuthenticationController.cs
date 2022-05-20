@@ -43,6 +43,7 @@ public class AuthenticationController : ControllerBase
             var errors = result.Errors.Select(e => e.Description);
             return BadRequest(new ResponseDto { Errors = errors });
         }
+
         return StatusCode(201);
     }
 

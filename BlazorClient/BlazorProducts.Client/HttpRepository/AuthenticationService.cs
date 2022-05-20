@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using BlazorProducts.Client.AuthProviders;
 using Microsoft.AspNetCore.Components.Authorization;
+using SharedDto;
 using SharedDto.DataTransferObjects;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -57,18 +58,48 @@ namespace BlazorProducts.Client.HttpRepository
             {
                 return result;
             }
-            await _localStorage.SetItemAsync("authToken", result.Token);
+            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+            await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
+
             ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(
-                userForAuthentication.Email);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Token);
+                result.AccessToken);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "bearer", result.AccessToken);
+
             return new AuthResponseDto { IsAuthSuccessful = true };
         }
 
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("refreshToken");
             ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
             _client.DefaultRequestHeaders.Authorization = null;
+        }
+
+        public async Task<string> RefreshToken()
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+            var refreshToken = await _localStorage.GetItemAsync<string>("refreshToken");
+
+            var response = await _client.PostAsJsonAsync("token/refresh",
+                new RefreshTokenDto
+                {
+                    Token = token,
+                    RefreshToken = refreshToken
+                });
+
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<AuthResponseDto>(content, _options);
+
+            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+            await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue
+                ("bearer", result.AccessToken);
+
+            return result.AccessToken;
         }
     }
 }

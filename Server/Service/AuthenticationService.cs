@@ -47,7 +47,9 @@ internal sealed class AuthenticationService : IAuthenticationService
         //if (result.Succeeded)
         //    await _userManager.AddToRolesAsync(user, userForRegistration.Roles);
 
-
+        if (result.Succeeded)
+            await _userManager.AddToRoleAsync(user, "Viewer");
+        //await _userManager.AddToRoleAsync(user, "Manager");
         return result;
     }
 
@@ -150,6 +152,9 @@ internal sealed class AuthenticationService : IAuthenticationService
         var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, _user.UserName)
+
+
+
             };
 
         var roles = await _userManager.GetRolesAsync(_user);
