@@ -1,4 +1,6 @@
 ﻿using AMuthurajApi.Presentation.ActionFilters;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using SharedDto.DataTransferObjects;
@@ -11,10 +13,15 @@ namespace AMuthurajApi.Presentation.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly IServiceManager _service;
+    private readonly UserManager<User> _userManager;
 
-    public AuthenticationController(IServiceManager service) => _service = service;
+    public AuthenticationController(IServiceManager service, UserManager<User> userManager)
+    {
+        _service = service;
+        _userManager = userManager;
+    }
 
-    [HttpPost]
+    [HttpPost("register")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
     {
@@ -23,14 +30,14 @@ public class AuthenticationController : ControllerBase
             return BadRequest();
         }
         var result = await _service.AuthenticationService.RegisterUser(userForRegistration);
-        //if (!result.Succeeded)
-        //{
-        //    foreach (var error in result.Errors)
-        //    {
-        //        ModelState.TryAddModelError(error.Code, error.Description);
-        //    }
-        //    return BadRequest(ModelState);
-        //}
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+            return BadRequest(ModelState);
+        }
         if (!result.Succeeded)
         {
             var errors = result.Errors.Select(e => e.Description);
@@ -41,11 +48,15 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("login")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
-    public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+    public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuthenticationDto)
     {
-        if (!await _service.AuthenticationService.ValidateUser(user))
-            return Unauthorized();
 
+        if (!await _service.AuthenticationService.ValidateUser(userForAuthenticationDto))
+            return Unauthorized(new AuthResponseDto
+            {
+                ErrorMessage = "Invalid Authentication"
+
+            });
         var tokenDto = await _service.AuthenticationService
             .CreateToken(populateExp: true);
 

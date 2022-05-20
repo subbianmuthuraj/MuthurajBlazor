@@ -24,6 +24,7 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 using BlazorProducts.Client;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorProducts.Client.AuthProviders;
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -38,6 +39,7 @@ builder.Services.AddHttpClient("MuthurajApi", (sp, cl) =>
         cl.EnableIntercept(sp);
     });
 builder.Services.AddBlazoredToast();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(
     sp => sp.GetService<IHttpClientFactory>().CreateClient("MuthurajApi"));
 builder.Services.AddHttpClientInterceptor();
@@ -48,7 +50,9 @@ builder.Services.AddScoped<HttpInterceptorService>();
 
 //Authorization
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, TestAuthStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 //**Authorization
 
 

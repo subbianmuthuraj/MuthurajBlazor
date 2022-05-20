@@ -3,7 +3,7 @@
 @using System.Security.Claims
 
 <PageTitle>Counter</PageTitle>
-<AuthorizeView Roles="Administrator">
+<AuthorizeView>
     <Authorized>
         The user: @context.User.FindFirst(ClaimTypes.Name).Value is Authorized
     </Authorized>
