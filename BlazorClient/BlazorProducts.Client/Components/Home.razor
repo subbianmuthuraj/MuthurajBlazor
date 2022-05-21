@@ -1,28 +1,18 @@
-﻿<div style="text-align: center">
-    <h1 style="color: @Color">
-        @Title
-    </h1>
-    <p>
+﻿<MudText Align="Align.Center" Typo="Typo.h3" Color="Color.Primary">
+    Welcome to a Code-Maze shop created with
+    <br />Blazer UI Material Design
+</MudText>
+
+<MudPaper Elevation="3" Class="my-5 py-5">
+    <MudText Align="Align.Center">
         Feel free to
-        <a href="https://redbubble.com/people/vpecanac/works/4476889-code-maze-merch?asc=u" target="_blank">
-            Visit our shop
-        </a>
-        any time you want.
-    </p>
-    <p>
-        <img @attributes="AdditionalAttributes" class="img-fluid" />
-    </p>
-</div>
+        <MudLink Href="https://www.redbble.com" Target="_blank" Typo="Typo.h6">
+            Visit our Shop
+        </MudLink>
+        Any time you want.
+    </MudText>
+</MudPaper>
+<p style="text-align:center;">
+    <img src="/assets/products.png" alt="products image for the Home component" />
+</p>
 
-@code {
-    [EditorRequired]
-    [Parameter]
-    public string Title { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> AdditionalAttributes { get; set; }
-
-    [CascadingParameter(Name = "HeadingColor")]
-    public string Color { get; set; }
-
-}

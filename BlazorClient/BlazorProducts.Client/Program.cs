@@ -25,6 +25,7 @@ using BlazorProducts.Client;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorProducts.Client.AuthProviders;
 using Blazored.LocalStorage;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -38,6 +39,7 @@ builder.Services.AddHttpClient("MuthurajApi", (sp, cl) =>
         cl.BaseAddress = new Uri(apiConfiguration.BaseAddress + "/api/");
         cl.EnableIntercept(sp);
     });
+builder.Services.AddMudServices();
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(
