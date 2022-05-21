@@ -4,6 +4,7 @@ using AMuthurajApi.Presentation.ActionFilters;
 using AMuthurajApi.Utility;
 using AspNetCoreRateLimit;
 using Contracts;
+using EmailService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,12 @@ builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddJwtConfiguration(builder.Configuration);
 
 builder.Services.ConfigureSwagger();
-
+//Email Configuration
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration")
+    .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+//**Email Configuration
 builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;

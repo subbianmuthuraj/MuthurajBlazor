@@ -1,8 +1,10 @@
 ﻿using Blazored.LocalStorage;
 using BlazorProducts.Client.AuthProviders;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using SharedDto;
 using SharedDto.DataTransferObjects;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -16,14 +18,16 @@ namespace BlazorProducts.Client.HttpRepository
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
-
+        private readonly NavigationManager _navManager;
         public AuthenticationService(HttpClient client,
             AuthenticationStateProvider authStateProvider,
-            ILocalStorageService localStorage)
+            ILocalStorageService localStorage,
+            NavigationManager navigationManager)
         {
             _client = client;
             _authStateProvider = authStateProvider;
             _localStorage = localStorage;
+            _navManager = navigationManager;
         }
 
 
@@ -100,6 +104,27 @@ namespace BlazorProducts.Client.HttpRepository
                 ("bearer", result.AccessToken);
 
             return result.AccessToken;
+        }
+
+        public async Task<HttpStatusCode> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            forgotPasswordDto.ClientURI =
+                Path.Combine(_navManager.BaseUri, "resetPassword");
+
+            var result = await _client.PostAsJsonAsync("authentication/forgotpassword", forgotPasswordDto);
+            return result.StatusCode;
+        }
+
+        public async Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var resetresult = await _client.PostAsJsonAsync("authentication/resetpassword", resetPasswordDto);
+
+            var resetContent = await resetresult.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<ResetPasswordResponseDto>(resetContent, _options);
+
+            return result;
+
         }
     }
 }

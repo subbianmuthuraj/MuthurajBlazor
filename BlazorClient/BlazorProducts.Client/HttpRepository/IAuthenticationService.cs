@@ -1,4 +1,6 @@
-﻿using SharedDto.DataTransferObjects;
+﻿using SharedDto;
+using SharedDto.DataTransferObjects;
+using System.Net;
 
 namespace BlazorProducts.Client.HttpRepository
 {
@@ -8,5 +10,8 @@ namespace BlazorProducts.Client.HttpRepository
         Task<AuthResponseDto> Login(UserForAuthenticationDto userForAuthentication);
         Task Logout();
         Task<string> RefreshToken();
+        Task<HttpStatusCode> ForgotPassword(ForgotPasswordDto forgotPasswordDto);
+
+        Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordDto resetPasswordDto);
     }
 }

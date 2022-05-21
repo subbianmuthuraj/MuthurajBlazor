@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\resources\EmailService\EmailService.csproj" />
 		<ProjectReference Include="..\CompanyEmployees.Presentation\AMuthurajApi.Presentation.csproj" />
 		<ProjectReference Include="..\LoggerService\LoggerService.csproj" />
 		<ProjectReference Include="..\Repository\Repository.csproj" />

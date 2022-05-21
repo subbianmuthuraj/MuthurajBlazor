@@ -143,6 +143,8 @@ public static class ServiceExtensions
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
+        services.Configure<DataProtectionTokenProviderOptions>(o =>
+                                o.TokenLifespan = TimeSpan.FromHours(2));
     }
 
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

@@ -1,8 +1,11 @@
 ﻿using AMuthurajApi.Presentation.ActionFilters;
+using EmailService;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Service.Contracts;
+using SharedDto;
 using SharedDto.DataTransferObjects;
 using SharedDto.DataTransferObjects.Masters;
 
@@ -14,11 +17,15 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IServiceManager _service;
     private readonly UserManager<User> _userManager;
+    private readonly IEmailSender _emailSender;
 
-    public AuthenticationController(IServiceManager service, UserManager<User> userManager)
+    public AuthenticationController(IServiceManager service,
+        UserManager<User> userManager,
+        IEmailSender emailSender)
     {
         _service = service;
         _userManager = userManager;
+        _emailSender = emailSender;
     }
 
     [HttpPost("register")]
@@ -63,4 +70,61 @@ public class AuthenticationController : ControllerBase
 
         return Ok(tokenDto);
     }
+
+    [HttpPost("forgotPassword")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+    {
+        var user = await _userManager.FindByNameAsync(forgotPasswordDto.Email);
+        if (user == null)
+            return BadRequest("Invalid Request");
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var param = new Dictionary<string, string>
+        {
+            {"token", token },
+            {"email", forgotPasswordDto.Email }
+        };
+
+        var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+
+        var message = new Message(new string[] { user.Email }, "Reset Password Token from Blzor Product",
+            callback, null);
+
+        await _emailSender.SendEmailAsync(message);
+
+        return Ok();
+    }
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPassword(
+        [FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        var errorResponse = new ResetPasswordResponseDto
+        {
+            Errors = new string[] { "Reset Password Failed" }
+        };
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(errorResponse);
+        }
+
+        var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+
+        if (user == null)
+            return BadRequest(errorResponse);
+
+        var resetPassResult = await _userManager.ResetPasswordAsync(user,
+            resetPasswordDto.Token, resetPasswordDto.Password);
+
+        if (!resetPassResult.Succeeded)
+        {
+            var errors = resetPassResult.Errors.Select(e => e.Description);
+            return BadRequest(new ResetPasswordResponseDto { Errors = errors });
+        }
+
+        return Ok(new ResetPasswordResponseDto { IsResetPasswordSuccessful = true });
+    }
+
+
 }

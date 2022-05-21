@@ -111,7 +111,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         }
     }
 
-    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
