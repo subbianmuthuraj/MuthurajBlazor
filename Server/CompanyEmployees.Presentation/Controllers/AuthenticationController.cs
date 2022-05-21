@@ -88,16 +88,32 @@ public class AuthenticationController : ControllerBase
                 ErrorMessage = "Invalid Authentication"
 
             });
-        //Email Confirmation Pending
+        if (await _userManager.IsLockedOutAsync(_user))
+        {
+            var content = $"Your account is locked out. " +
+                $"If you want to reset the password, you can use the " +
+                $"Forgot Password link on the Login page";
+
+            var message = new Message(new string[] { userForAuthenticationDto.Email },
+                "Locked out account information", content, null);
+
+            await _emailSender.SendEmailAsync(message);
+
+            return Unauthorized(new AuthResponseDto
+            {
+                ErrorMessage = "The account is locked out"
+            });
+        }
+        //Email verification Pending
         //if (!await _userManager.IsEmailConfirmedAsync(_user))
         //    return Unauthorized(new AuthResponseDto
         //    {
         //        ErrorMessage = "Email is not verified"
         //    });
-        //** Email Confirmationg Pending
+        //** Email verification Pending
         var tokenDto = await _service.AuthenticationService
             .CreateToken(populateExp: true);
-
+        await _userManager.ResetAccessFailedCountAsync(_user);
         return Ok(tokenDto);
     }
 
@@ -152,7 +168,7 @@ public class AuthenticationController : ControllerBase
             var errors = resetPassResult.Errors.Select(e => e.Description);
             return BadRequest(new ResetPasswordResponseDto { Errors = errors });
         }
-
+        await _userManager.SetLockoutEndDateAsync(user, null);
         return Ok(new ResetPasswordResponseDto { IsResetPasswordSuccessful = true });
     }
 

@@ -14,6 +14,7 @@ using Entities.ConfigurationModels;
 using Microsoft.Extensions.Options;
 using SharedDto.DataTransferObjects;
 
+
 namespace Service;
 
 internal sealed class AuthenticationService : IAuthenticationService
@@ -28,7 +29,8 @@ internal sealed class AuthenticationService : IAuthenticationService
     private User? _user;
 
     public AuthenticationService(ILoggerManager logger, IMapper mapper,
-        UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
+        UserManager<User> userManager, IOptions<JwtConfiguration> configuration
+        )
     {
         _logger = logger;
         _mapper = mapper;
@@ -36,6 +38,7 @@ internal sealed class AuthenticationService : IAuthenticationService
         _configuration = configuration;
         _jwtConfiguration = _configuration.Value;
         _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
     }
 
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
@@ -59,7 +62,11 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         var result = (_user != null && await _userManager.CheckPasswordAsync(_user, userForAuth.Password));
         if (!result)
-            _logger.LogWarn($"{nameof(ValidateUser)}: Authentication failed. Wrong user name or password.");
+            await _userManager.AccessFailedAsync(_user);
+
+
+
+        _logger.LogWarn($"{nameof(ValidateUser)}: Authentication failed. Wrong user name or password.");
 
         return result;
     }
