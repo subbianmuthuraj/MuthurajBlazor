@@ -2,6 +2,7 @@
 using BlazorProducts.Client.AuthProviders;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedDto;
 using SharedDto.DataTransferObjects;
 using System.Net;
@@ -34,6 +35,10 @@ namespace BlazorProducts.Client.HttpRepository
 
         public async Task<ResponseDto> RegisterUser(UserForRegistrationDto userForRegistrationDto)
         {
+            userForRegistrationDto.ClientURI = Path.Combine(
+                _navManager.BaseUri, "emailconfirmation");
+
+
             var response = await _client.PostAsJsonAsync("authentication/register",
                 userForRegistrationDto);
 
@@ -125,6 +130,20 @@ namespace BlazorProducts.Client.HttpRepository
 
             return result;
 
+        }
+
+        public async Task<HttpStatusCode> EmailConfirmation(string email, string token)
+        {
+            var queryStringParam = new Dictionary<string, string>
+            {
+                ["email"] = email,
+                ["Token"] = token
+            };
+
+            var response = await _client.GetAsync(QueryHelpers.AddQueryString(
+                "authentication/emailconfirmation", queryStringParam));
+
+            return response.StatusCode;
         }
     }
 }
