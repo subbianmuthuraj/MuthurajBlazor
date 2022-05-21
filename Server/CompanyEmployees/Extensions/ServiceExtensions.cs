@@ -143,9 +143,11 @@ public static class ServiceExtensions
             o.Lockout.AllowedForNewUsers = true;
             o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
             o.Lockout.MaxFailedAccessAttempts = 3;
+
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddDefaultTokenProviders();
+
         services.Configure<DataProtectionTokenProviderOptions>(o =>
                                 o.TokenLifespan = TimeSpan.FromHours(2));
     }

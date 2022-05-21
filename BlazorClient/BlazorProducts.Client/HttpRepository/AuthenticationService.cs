@@ -63,10 +63,10 @@ namespace BlazorProducts.Client.HttpRepository
 
             var result = JsonSerializer.Deserialize<AuthResponseDto>(content, _options);
 
-            if (!response.IsSuccessStatusCode)
-            {
+            if (!response.IsSuccessStatusCode || result.Is2StepVerificationRequired)
                 return result;
-            }
+
+
             await _localStorage.SetItemAsync("authToken", result.AccessToken);
             await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
 
@@ -145,5 +145,29 @@ namespace BlazorProducts.Client.HttpRepository
 
             return response.StatusCode;
         }
+
+        public async Task<AuthResponseDto> LoginVerification(TwoFactorVerificationDto twoFactorDto)
+        {
+            var response = await _client.PostAsJsonAsync("authentication/twostepverification",
+                twoFactorDto);
+            var content = await response.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<AuthResponseDto>(content, _options);
+
+            if (!response.IsSuccessStatusCode)
+                return result;
+
+            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+            await _localStorage.SetItemAsync("refreshToken", result.RefreshToken);
+
+            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(
+                result.AccessToken);
+
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "bearer", result.AccessToken);
+
+            return new AuthResponseDto { IsAuthSuccessful = true };
+        }
+
     }
 }

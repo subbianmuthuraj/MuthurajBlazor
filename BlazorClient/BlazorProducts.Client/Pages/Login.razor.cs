@@ -1,5 +1,6 @@
 ﻿using BlazorProducts.Client.HttpRepository;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using SharedDto.DataTransferObjects;
 
 namespace BlazorProducts.Client.Pages
@@ -23,7 +24,19 @@ namespace BlazorProducts.Client.Pages
             ShowAuthError = false;
 
             var result = await AuthenticationService.Login(_userForAuthentication);
-            if (!result.IsAuthSuccessful)
+
+            if (result.Is2StepVerificationRequired)
+            {
+                var queryParams = new Dictionary<string, string>()
+                {
+                    ["Provider"] = result.Provider,
+                    ["email"] = _userForAuthentication.Email
+                };
+
+                NavigationManager.NavigateTo(QueryHelpers.AddQueryString(
+                    "/twostepverification", queryParams));
+            }
+            else if (!result.IsAuthSuccessful)
             {
                 Error = result.ErrorMessage;
                 ShowAuthError = true;

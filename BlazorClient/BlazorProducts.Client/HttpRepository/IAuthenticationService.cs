@@ -15,5 +15,7 @@ namespace BlazorProducts.Client.HttpRepository
         Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordDto resetPasswordDto);
 
         Task<HttpStatusCode> EmailConfirmation(string email, string token);
+
+        Task<AuthResponseDto> LoginVerification(TwoFactorVerificationDto twoFactorDto);
     }
 }
