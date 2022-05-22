@@ -1,0 +1,40 @@
+﻿@page "/fetchcountries"
+@using Entities.Models
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Country>>>(GetServerData))"
+          Hover="true" Breakpoint="Breakpoint.Sm" RightAlignSmall="true"
+          @ref="_table" RowsPerPage="4">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Countries</MudText>
+        <MudSpacer />
+        <MudTextField OnDebounceIntervalElapsed="OnSearch"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0"
+                      T="string" DebounceInterval="500">
+        </MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Flag</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="name" T="Country"> Name </MudTableSortLabel></MudTh>
+        <MudTh>Code2</MudTh>
+        <MudTh>Code3</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="capitol" T="Country">Capitol</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="continent" T="Country">Continent</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Flag">
+            <MudAvatar Color="Color.Transparent" Size="Size.Large" Image="@context.FlagSVG" />
+        </MudTd>
+        <MudTd DataLabel="Name">@context.CountryName</MudTd>
+        <MudTd DataLabel="Code2">@context.CountryCode2</MudTd>
+        <MudTd DataLabel="Code3">$@context.CountryCode3</MudTd>
+        <MudTd DataLabel="Capitol">@context.Capitol</MudTd>
+        <MudTd DataLabel="Continent">@context.Continent</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="@_pageSizeOption" RowsPerPageString="Products per page" />
+    </PagerContent>
+</MudTable>
